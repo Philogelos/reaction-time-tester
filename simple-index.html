@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Reaction Game</title>
+    <style>
+      #box {
+        width: 300px;
+        height: 200px;
+        background-color: red;
+        margin: 100px auto;
+        color: white;
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- step 1 just box and style -->
+    <div id="box">Wait for green...</div>
+
+    <script>
+        function startGame(){//last thing to add
+
+        // step 2 Change the box text when you click it.
+
+        let box = document.getElementById("box");
+      
+        box.addEventListener("click", function () {
+          box.textContent = "You clicked!";
+        });
+
+        //     What you learn:
+
+        //      getElementById
+
+        //      addEventListener
+
+        //      textContent
+
+        // ---------------------------------------------------------------
+
+        // Step 3: Add Random Delay
+
+        // Wait a few seconds, then change box to green.
+
+
+        let delay = Math.random() * 3000 + 2000; // 2 to 5 seconds
+
+        setTimeout(function () {
+            box.style.backgroundColor = "green";
+            box.textContent = "CLICK!";
+        }, delay);
+
+
+        // What you learn:
+
+        // setTimeout
+
+        // Math.random()
+
+        // style.backgroundColor
+
+        // ---------------------------------------------------------------
+
+
+        // Step 4: Add Reaction Time Timer
+
+        // Show how fast the user clicked after green
+
+        let startTime;
+
+        setTimeout(function () {
+        box.style.backgroundColor = "green";
+        box.textContent = "CLICK!";
+
+        startTime = Date.now(); // Start the timer - new line
+
+        }, delay);
+
+        box.addEventListener("click", function () {
+        let endTime = Date.now();
+        let reactionTime = endTime - startTime;
+        box.textContent = reactionTime + " ms"; // instead of box.textContent = "You clicked!";
+        });
+
+        // What you learn:
+
+        // Date.now()
+
+        // ---------------------------------------------------------------
+
+        // Step 5: Add "Too Soon!" Check
+
+        // If the player clicks before green, say “Too Soon!”
+
+        let waiting = true; // new
+
+        setTimeout(function () {
+        box.style.backgroundColor = "green";
+        box.textContent = "CLICK!";
+        startTime = Date.now();
+        waiting = false; // new
+        }, delay);
+
+        box.addEventListener("click", function () {
+        if (waiting) {// new
+            box.textContent = "Too Soon!"; // new
+        } else {// new
+            let endTime = Date.now();
+            let reactionTime = endTime - startTime;
+            box.textContent = reactionTime + " ms";
+        }
+        });
+
+        // if/else
+
+        // ---------------------------------------------------------------
+
+        // Step 6: Play Again
+
+        //  Restart the game after showing the result.
+
+        box.addEventListener("click", function () {
+        if (waiting) {
+            box.textContent = "Too Soon!";
+            setTimeout(startGame, 2000); // new
+        } else {
+            let endTime = Date.now();
+            let reactionTime = endTime - startTime;
+            box.textContent = reactionTime + " ms";
+            waiting = true;
+            setTimeout(startGame, 2000); // new
+        }
+        });
+
+
+
+    }
+
+        startGame(); // Start the first round
+        // wrap the entire game in a startGame() function
+        // then reset to red!
+
+
+
+
+
+
+
+
+
+      </script>
+      
+  </body>
+</html>
