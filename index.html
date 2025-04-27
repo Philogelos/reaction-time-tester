@@ -19,38 +19,61 @@
   </head>
   <body>
     <div id="box">Wait for green...</div>
+    <div id="history"></div>
     
     <script>
-  let box = document.getElementById("box");
+      let box = document.getElementById("box");
+      let tooEarly = true;
+      let startTime = 0;
+      let reactionTime;
+      let clickTimeout;
+      let rtArray = JSON.parse(localStorage.getItem('reactionTimeSaved')) || [];
 
-  box.addEventListener("click", function () {
-    box.textContent = "You clicked!";
-  });
+      function startGame() {
+        // Clear previous timer if any
+        clearTimeout(clickTimeout);
 
+        // Set new delay each time (2-5 seconds)
+        let delay = Math.random() * 3000 + 2000;
 
-  let delay = Math.random() * 3000 + 2000; // 2 to 5 seconds
+        box.style.backgroundColor = "red";
+        box.textContent = "Wait for green...";
+        tooEarly = true;
 
-  setTimeout(function () {
-    box.style.backgroundColor = "green";
-    box.textContent = "CLICK!";
-  }, delay); 
+        clickTimeout = setTimeout(() => {
+          box.style.backgroundColor = "green";
+          box.textContent = "CLICK!";
+          tooEarly = false;
+          startTime = Date.now();
+        }, delay);
+      }
 
-  let startTime;
+      function updateHistory() {
+        let historyDiv = document.getElementById("history");
+        historyDiv.innerHTML = "<strong>Previous Times:</strong><br>" + rtArray.map(rt => rt + " ms").join("<br>");
+      }
 
-setTimeout(function () {
-  box.style.backgroundColor = "green";
-  box.textContent = "CLICK!";
-  startTime = Date.now(); // Start the timer
-}, delay);
+      box.addEventListener("click", function () {
+        if (tooEarly) {
+          box.textContent = "Too early!";
+          clearTimeout(clickTimeout);
+          setTimeout(startGame, 2000);
+        } else {
+          let endTime = Date.now();
+          reactionTime = endTime - startTime;
+          box.textContent = reactionTime + " ms";
+          rtArray.push(reactionTime);
 
-box.addEventListener("click", function () {
-  let endTime = Date.now();
-  let reactionTime = endTime - startTime;
-  box.textContent = reactionTime + " ms";
-});
+          localStorage.setItem('reactionTimeSaved', JSON.stringify(rtArray));
+          updateHistory();
+        }
 
-</script>
+        tooEarly = true;
+        setTimeout(startGame, 2000);
+      });
 
-
+      updateHistory();
+      startGame();
+    </script>
   </body>
 </html>

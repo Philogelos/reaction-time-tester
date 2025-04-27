@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Reaction Game</title>
+    <style>
+      #box {
+        width: 300px;
+        height: 200px;
+        background-color: red;
+        margin: 100px auto;
+        color: white;
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box">Wait for green...</div>
+    <div id="history"></div>
+    
+    <script>
+      let box = document.getElementById("box");
+      let delay = Math.random() * 3000 + 2000; // 2 to 5 seconds
+      let tooEarly = true
+      let startTime = 0
+      let reactionTime
+      let click
+      let rtArray = JSON.parse(localStorage.getItem('reactionTimeSaved'))? JSON.parse(localStorage.getItem('reactionTimeSaved')):[]
+      console.log(typeof(rtArray), rtArray)
+
+      function startGame(){  
+        box.style.backgroundColor = "red"
+        box.textContent = "Wait for green...";
+
+        click = setTimeout(function () {
+          box.style.backgroundColor = "green";
+          box.textContent = "CLICK!";
+          tooEarly = false
+          startTime = Date.now(); // Start the timer
+        }, delay)        
+      }
+      startGame()
+
+      box.addEventListener("click", function () {
+        if(tooEarly){
+          box.textContent = "Too early!";
+
+          clearTimeout(click);
+          setTimeout(startGame, 2000)
+        } else{
+          let endTime = Date.now();
+          reactionTime = endTime - startTime;
+          box.textContent = reactionTime + " ms";
+          rtArray.push(reactionTime)
+
+          console.log("rtArray:", rtArray )
+          let rt = JSON.stringify(rtArray)
+          localStorage.setItem('reactionTimeSaved', rt);
+
+          let rts = localStorage.getItem('reactionTimeSaved')
+          rts = JSON.parse(rts)
+          console.log("rts:", rts )
+          document.getElementById("history").textContent = rts
+        }       
+
+        tooEarly = true
+        setTimeout(startGame, 2000)
+
+      });
+
+
+    </script>
+
+
+  </body>
+</html>
