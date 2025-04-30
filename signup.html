@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up</title>
+</head>
+<body>
+    <button onclick="addMember()">Sign up</button>
+    <button onclick="checkMember()">Log in</button>
+    <script>
+        let members = []
+        members = [
+            {
+                name: "a", 
+                pass: "aa"
+            },
+            {
+                name: "b", 
+                pass: "bb"
+            },
+            {
+                name: "c", 
+                pass: "cc"
+            },
+            {
+                name: "d", 
+                pass: "dd"
+            },
+
+        ]
+        function addMember(){
+            let name = prompt("Input your name.")
+            let pass = prompt("Create your passkey.")
+
+            let member = {
+                name: name, 
+                pass: pass
+            }
+
+            members.push(member)
+            console.log(members)
+        }
+
+        console.log("members", JSON.stringify(members))
+        let index = 0
+        function nameFound(name){
+            for (let i = 0; i < members.length; i++){
+                if (members[i].name == name) {
+                    index = i
+                    return true
+                } 
+                else {
+                    return false
+                }
+            }
+        }
+        function checkPass(pass, index){
+            if(members[index].pass == pass){
+                return true
+            }
+            else {
+                    return false
+            }
+        }
+        let name = ""
+        let pass = ""
+
+        function checkMember(){
+            let verified = false
+            while(!verified){
+                name = prompt("Input your name.")
+                while(nameFound(name) && !checkPass(pass, index)){
+                    pass = prompt("Input your passkey.")
+                    if(checkPass(pass, index)){
+                        verified = true
+                        alert("Welcome " + members[index].name + "! Do you want to play?")
+                    } else{
+                        alert("Wrong passkey! Try again.")
+                    }
+                }  
+                if(!verified){
+                    alert("Name not found.") 
+                }                                         
+            }
+        }
+
+        
+        
+        
+        
+    </script>
+    
+</body>
+</html>
